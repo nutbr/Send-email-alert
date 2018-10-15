@@ -1,0 +1,381 @@
+//
+
+//  ViewController.h
+
+//  MessageUI
+
+//
+
+//  Created by Sábado on 08/11/14.
+
+//  Copyright (c) 2014 RUI TOLEDO. All rights reserved.
+
+//
+
+ 
+
+#import <UIKit/UIKit.h>
+
+#import <MessageUI/MessageUI.h>
+
+ 
+
+ 
+
+// Importar frameworks necessarios para a implementacao do projeto
+
+@interface ViewController : UIViewController <MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate, UIAlertViewDelegate>
+
+ 
+
+ 
+
+// Actions para nossos botões em tela
+
+- (IBAction)enviarEmail:(UIButton *)sender;
+
+ 
+
+ 
+
+- (IBAction)enviarMensagem:(UIButton *)sender;
+
+ 
+
+ 
+
+ 
+
+@end
+
+ 
+
+//
+
+//  ViewController.m
+
+//  MessageUI
+
+//
+
+//  Created by Sábado on 08/11/14.
+
+//  Copyright (c) 2014 RUI TOLEDO. All rights reserved.
+
+//
+
+ 
+
+#import "ViewController.h"
+
+ 
+
+@interfaceViewController ()
+
+ 
+
+@end
+
+ 
+
+@implementation ViewController
+
+ 
+
+- (void)viewDidLoad
+
+{
+
+    [superviewDidLoad];
+
+// Do any additional setup after loading the view, typically from a nib.
+
+}
+
+ 
+
+- (void)didReceiveMemoryWarning
+
+{
+
+    [superdidReceiveMemoryWarning];
+
+    // Dispose of any resources that can be recreated.
+
+}
+
+ 
+
+- (IBAction)enviarEmail:(UIButton *)sender
+
+{
+
+    // Primeiro verificamos se o dispositivo está apto para enviar email.
+
+    
+
+    if ([MFMailComposeViewControllercanSendMail])
+
+    {
+
+        
+
+        MFMailComposeViewController *mailCOmpose = [[MFMailComposeViewControlleralloc]init];
+
+        
+
+        mailCOmpose.mailComposeDelegate=self;
+
+        
+
+        
+
+        
+
+        // Métodos que preenchem os campos do nosso email
+
+        
+
+        // Método que define o assunto do email
+
+        [mailCOmpose setSubject:@"Currículo - Felipe Martins"];
+
+        
+
+        // Método que define o corpo da mensagem
+
+        [mailCOmpose setMessageBody:@"<strong>Boa tarde,<br>Segue meu <i>currículo</i> em anexo.<br>Eu gostaria de me candidatar à vaga de Steve Jobs.</strong>"isHTML:YES];
+
+        
+
+        // Criando o array com os destinatários
+
+        NSArray *arrayDestinatarios = @[@"rh@apple.com.br", @"timcook@apple.com"];
+
+        
+
+        // Método que seta os destinatarios
+
+        [mailCOmpose setToRecipients:arrayDestinatarios];
+
+        
+
+        // Mostrando o mailCOmpose
+
+        [selfpresentViewController:mailCOmpose animated:YEScompletion:nil];
+
+        
+
+        
+
+    }
+
+    else
+
+    {
+
+        // Caso nao seja possivel, alertamos o usuario
+
+        
+
+        UIAlertView *alerta = [[UIAlertViewalloc]initWithTitle:@"Aviso"message:@"Não é possível enviar o email no momento"delegate:selfcancelButtonTitle:nilotherButtonTitles:@"Ok", @"Teste", nil];
+
+        
+
+        alerta.tag=20;
+
+        
+
+        [alerta show];
+
+    }
+
+    
+
+    
+
+}
+
+ 
+
+ 
+
+ 
+
+- (IBAction)enviarMensagem:(UIButton *)sender
+
+{
+
+    
+
+    
+
+    
+
+}
+
+ 
+
+ 
+
+#pragma mark - Métodos de MFMailComposeViewControllerDelegate
+
+ 
+
+-(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+
+{
+
+    
+
+    UIAlertView *alerta = [[UIAlertViewalloc]initWithTitle:@"Alerta"message:@""delegate:selfcancelButtonTitle:nilotherButtonTitles:@"Ok", nil];
+
+    
+
+    alerta.tag=10;
+
+    
+
+    switch (result)
+
+    {
+
+        caseMFMailComposeResultSent:
+
+            alerta.message=@"Email enviado com sucesso";
+
+            break;
+
+ 
+
+        caseMFMailComposeResultFailed:
+
+            alerta.message=@"Falha no Envio!";
+
+            break;
+
+ 
+
+        caseMFMailComposeResultCancelled:
+
+            alerta.message=@"Email Cancelado";
+
+            break;
+
+ 
+
+        caseMFMailComposeResultSaved:
+
+            alerta.message=@"Email Salvo";
+
+            break;
+
+ 
+
+            
+
+        default:
+
+            break;
+
+    }
+
+    
+
+    
+
+    // Ao terminar todas as configurações tiramos nosso controller de cena.
+
+    [controller dismissViewControllerAnimated:YEScompletion:^
+
+    {
+
+         [alerta show];
+
+     }];
+
+    
+
+    
+
+}
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+#pragma mark - Métodos de UIAlertViewDelegate
+
+-(void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
+
+{
+
+    
+
+    if (alertView.tag==20)
+
+    {
+
+    switch (buttonIndex)
+
+    {
+
+        case 0:
+
+            NSLog(@"Clicou Ok");
+
+            break;
+
+        
+
+        case 1:
+
+            NSLog(@"Clicou Teste");
+
+            break;
+
+            
+
+        default:
+
+            break;
+
+    }
+
+    }
+
+    else
+
+    {
+
+        NSLog(@"Email");
+
+    }
+
+    
+
+    
+
+}
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+@end
